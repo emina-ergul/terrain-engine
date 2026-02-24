@@ -1,44 +1,55 @@
-from fastapi import APIRouter, HTTPException
+import os
+import shutil
+
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from app.services.process_dem import calculate_terrain
 from app.services.create_maps import create_maps
 
 router = APIRouter()
 
+UPLOAD_DIR = "./storage/raw"
 
-@router.get("/process-example")
-def calculate_terrain_example_endpoint():
+
+def get_image_urls():
+    base_url = "http://127.0.0.1:8000/images"
+    pngs = os.listdir("./storage/maps")
+    url = {name.split(".")[0]: f"{base_url}/{name}" for name in pngs}
+    return url
+
+
+def upload_file(file: UploadFile):
     try:
-        calculate_terrain()
-        create_maps()
-        base_url = "http://127.0.0.1:8000/images"
-        pngs = [
-            "brecon_slope.png",
-            "brecon_aspect.png",
-            "brecon_hillshade.png",
-            "brecon_curvature.png",
-        ]
-        url = {name.split(".")[0].split("_")[1]: f"{base_url}/{name}" for name in pngs}
-        print("Generated image URLs:", url)
-        return {"message": "Terrain processed and maps created", "images": url}
+        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        print(f"Uploaded file saved to {file_path}")
     except Exception as e:
-        print(f"Error processing terrain: {e}")
+        print(f"Error uploading file: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# @router.get("/process-terrain")
-# def calculate_terrain_endpoint():
-#     try:
-#         calculate_terrain()
-#     except Exception as e:
-#         print(f"Error processing terrain: {e}")
-#         raise HTTPException(status_code=500, detail=str(e))
+@router.get("/calculate-terrain-example")
+def calculate_terrain_endpoint():
+    try:
+        example_file = "brecon_dem_27700.tif"
+        calculate_terrain(example_file)
+        create_maps()
+        url = get_image_urls()
+        print("Generated image URLs:", url)
+        return {"images": url}
+    except Exception as e:
+        print(f"Error processing example terrain: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-# @router.get("/process-maps")
-# def create_maps_endpoint():
-#     try:
-#         create_maps()
-
-#     except Exception as e:
-#         print(f"Error processing maps: {e}")
-#         raise HTTPException(status_code=500, detail=str(e))
+@router.post("/calculate-terrain-from-file")
+def calculate_terrain_from_file_endpoint(tif_file: UploadFile = File(...)):
+    try:
+        upload_file(tif_file)
+        calculate_terrain(tif_file.filename)
+        create_maps()
+        url = get_image_urls()
+        return {"images": url}
+    except Exception as e:
+        print(f"Error processing terrain from file: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

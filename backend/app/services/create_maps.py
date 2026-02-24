@@ -1,5 +1,6 @@
 import rasterio
 import matplotlib
+import time
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -7,43 +8,44 @@ import numpy as np
 import os
 
 
+def remove_maps():
+    maps_dir = "./storage/maps"
+    if os.path.exists(maps_dir):
+        for file in os.listdir(maps_dir):
+            os.remove(os.path.join(maps_dir, file))
+
+
 def create_maps():
+    remove_maps()
     processed_dir = "./storage/processed"
-    tiffs = [
-        "brecon_aspect.tiff",
-        "brecon_slope.tiff",
-        "brecon_hillshade.tiff",
-        "brecon_curvature.tiff",
-    ]
+    tiffs = os.listdir(processed_dir)
 
-    plt.figure(figsize=(12, 10))
-
-    for i, name in enumerate(tiffs, 1):
+    for name in tiffs:
         path = os.path.join(processed_dir, name)
         with rasterio.open(path) as src:
             data = src.read(1)
             nodata = src.nodata
             data = np.where(data == nodata, np.nan, data)
 
-        plt.subplot(2, 2, i)
+        plt.figure(figsize=(6, 6))
 
         vmin = None
         vmax = None
 
-        if name == "brecon_hillshade.tiff":
+        if "hillshade" in name:
             cmap = "gray"
-        elif name == "brecon_slope.tiff":
+        elif "slope" in name:
             cmap = "terrain"
-        elif name == "brecon_aspect.tiff":
+        elif "aspect" in name:
             cmap = "hsv"
-        elif name == "brecon_curvature.tiff":
+        elif "curvature" in name:
             cmap = "RdBu"
             vmin = np.nanpercentile(data, 5)
             vmax = np.nanpercentile(data, 95)
-
+        print("!!!!!!!!!!!!!!!!!!!!!!!!")
         plt.figure(figsize=(6, 6))
         im = plt.imshow(data, cmap=cmap, vmin=vmin, vmax=vmax)
-        plt.title(name.split("_")[1].split(".")[0].capitalize())
+        plt.title(name.split(".")[0].capitalize())
         plt.axis("off")
         plt.colorbar(im)
 

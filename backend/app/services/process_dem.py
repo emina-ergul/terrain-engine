@@ -2,13 +2,22 @@ import os
 import numpy as np
 import rasterio
 
+processed_dir = "./storage/processed"
 
-def calculate_terrain():
+
+def clear_old_processed_files():
+    if os.path.exists(processed_dir):
+        for file in os.listdir(processed_dir):
+            os.remove(os.path.join(processed_dir, file))
+
+
+def calculate_terrain(tif_file):
+    clear_old_processed_files()
+
     print("Starting terrain processing...")
 
     # Reprojected to EPSG:27700 using GDAL bc im using data of Brecon
-    raw_data = "./storage/raw/brecon_dem_27700.tif"
-    processed_dir = "./storage/processed"
+    raw_data = f"./storage/raw/{tif_file}"
     os.makedirs(processed_dir, exist_ok=True)
 
     with rasterio.open(raw_data) as src:
@@ -55,7 +64,7 @@ def calculate_terrain():
     ]:
         out_profile = profile.copy()
         out_profile.update(dtype=rasterio.float32, count=1)
-        out_path = os.path.join(processed_dir, f"brecon_{name}.tiff")
+        out_path = os.path.join(processed_dir, f"{name}.tiff")
         with rasterio.open(out_path, "w", **out_profile) as dst:
             dst.write(date.astype(rasterio.float32), 1)
         print(f"Saved {name} to {out_path}")
