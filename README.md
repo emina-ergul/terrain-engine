@@ -1,14 +1,16 @@
 # Project Overview
 
-This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
+This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
 
 # terrain-engine learning points
 
 ### General
 
-- In a **DEM** (digital elevation model) each pixel is an elevation value
+- A **DEM** (digital elevation model) is a map of elevation, where data is like a grid and each plot represents an area of certain size
 
-- A .tiff (GeoTiff) is **raster data**, which is a grid of pixels and each pixel stores a value
+- **raster data** is how the DEM is stored, so a grid of pixels and each pixel stores a value
+
+- A GeoTif holds DEM raster but with additional geographical info like georeferencing so the location on earth is known
 
 - GeoJSON is vector not raster data
 
@@ -16,7 +18,7 @@ This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital 
 
 - To calculate just the pixel grid data, you can use src.read(1) to receive the raw pixels as a numpy array.
 
-- The **profile** contains geo metadata
+- The **profile** contains the geo metadata
 
 - Saving with profile reinserts the geo metadata after calculations have been made so that the raster remians georeferenced
 
@@ -24,7 +26,6 @@ This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital 
 
 - Mounting the PNGs in FastAPI was a good flexible way to bridge between the backend and frontend, allowign the browser to access the images at a fastAPI url
 
-- cache bit
 
 ### Calculating slope (steepness)
 
@@ -36,6 +37,7 @@ This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital 
 
 - degrees() converts the result from radians
 
+
 ### Calculating aspect (which direction a hill is facing)
 
 - arctan2 is used to calculate which direction the slope is facing using the slope results already calculated. kinda acts like a compass
@@ -45,11 +47,25 @@ This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital 
 ### Calculating hillshade
 
 
+- First an altitude and azimuth (compass direction of sun) for the sun needs to be picked in degrees. These values then get converted to radians using np.radians()
+
+- The use of the triganometry calculations here were definitely the most difficult part for me to understand so I tried to simplify it for my understanding. Basically this is to find total brightness by adding light from above to light from sideways.
+
+- I was able to deduce that the direction of the sunlight was acting as the hypotenuse
+
+- Then it can be thought of as each point of light in the set direction being cut both vertically (sine) and horizontally (cosine)
+
+- The calculations essentially represent:
+     
+     (vertical light * vertical surface response) + (horizontal light * horizontal surface response * direction match)
+
+
+- np.clip() turns it into a grayscale by 'clipping' the array, multiplying by 255 turns it into a brightness scale between 0 and 255
 
 
 ### Calculating curvature
 
-- involves calcuklating the gradient of a gradient of slope in both E-W directions and then N-S, e.g first gradient calc works out the slope along x and second gradient calc works out how the slope change i.e bends. this was probably the most difficult bit for me to understand
+- involves calcuklating the gradient of a gradient of slope in both E-W directions and then N-S, e.g first gradient calc works out the slope along x and second gradient calc works out how the slope change i.e bends.
 
 - the axis arg is used in np.gradient here to indicate moving up down (axis=0) and moving across (axis=1)
 
@@ -60,6 +76,7 @@ This project uses an SRTM GL1 30 dataset in GeoTiff format of DEM data (Digital 
 ### Resources
 
 <https://portal.opentopography.org/datasets>
+<https://en.wikipedia.org/wiki/Digital_elevation_model>
 <https://matplotlib.org/stable/users/index.html>
 <https://earthdatascience.org/tutorials/get-slope-aspect-from-digital-elevation-model/>
 <https://vuejs.org/guide/typescript/overview.html>
