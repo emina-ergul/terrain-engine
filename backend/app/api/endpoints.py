@@ -2,7 +2,7 @@ import os
 import shutil
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from app.services.process_dem import process_terrain
+from backend.app.services.process_raster import process_terrain
 from app.services.create_maps import create_maps
 
 router = APIRouter()

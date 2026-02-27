@@ -3,3 +3,6 @@ run:
 
 stop:
     pkill -f uvicorn
+
+test:
+    pytest tests/

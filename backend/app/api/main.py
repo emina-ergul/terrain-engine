@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from app.endpoints import router
+from backend.app.api.endpoints import router
 
 app = FastAPI(title="Terrain Analysis Engine")
 
