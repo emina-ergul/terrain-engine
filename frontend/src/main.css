@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(44, 44, 44);
+    color: rgb(228, 228, 228);
+}
+.nav {
+    padding: 20px 30px;
+    background: rgb(77, 79, 80);
+}
+.main {
+    padding: 20px 30px;
+    margin: 0px;
+}
+.example {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgb(255, 190, 49);
+}
+.example:hover {
+    text-decoration: underline;
+}
+.upload-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+.btn {
+    background: #364caa;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+input[type="file"]::file-selector-button {
+    background: #364caa;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn:hover, input[type="file"]::file-selector-button:hover {
+    background: #4559bd;
+}
+.img-cont {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
