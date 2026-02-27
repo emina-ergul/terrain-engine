@@ -1,10 +1,10 @@
 # Project Overview
 
-This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
+This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
 
 # terrain-engine learning points
 
-### General
+### Data
 
 - A **DEM** (digital elevation model) is a map of elevation, where data is like a grid and each plot represents an area of certain size
 
@@ -24,6 +24,9 @@ This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation
 
 - When opening a file with rasterio, src.res returns 2 values (dx, dy), one for pixel width and one for pixel height
 
+
+### General
+
 - Mounting the PNGs in FastAPI was a good flexible way to bridge between the backend and frontend, allowign the browser to access the images at a fastAPI url
 
 
@@ -33,7 +36,7 @@ This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation
 
 - sqrt() is used to calculate gradient magnitude
 
--arctan() is used to get the rise/run and converts to an angle: rise run being the slope bc slope = rise/run e.g is rise is 10m and run is 20m, 10/20 = 0.5
+- arctan() is used to get the rise/run and converts to an angle: rise run being the slope bc slope = rise/run e.g is rise is 10m and run is 20m, 10/20 = 0.5
 
 - degrees() converts the result from radians
 
@@ -49,7 +52,7 @@ This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation
 
 - First an altitude and azimuth (compass direction of sun) for the sun needs to be picked in degrees. These values then get converted to radians using np.radians()
 
-- The use of the triganometry calculations here were definitely the most difficult part for me to understand so I tried to simplify it for my understanding. Basically this is to find total brightness by adding light from above to light from sideways.
+- The use of the trigonometry calculations here were definitely the most difficult part for me to understand so I tried to simplify it for my understanding. Basically this is to find total brightness by adding light from above to light from sideways.
 
 - I was able to deduce that the direction of the sunlight was acting as the hypotenuse
 
@@ -75,8 +78,8 @@ This project uses a GeoTif of SRTM GL1 30 dataset of DEM data (Digital Elevation
 
 ### Resources
 
-<https://portal.opentopography.org/datasets>
-<https://en.wikipedia.org/wiki/Digital_elevation_model>
-<https://matplotlib.org/stable/users/index.html>
-<https://earthdatascience.org/tutorials/get-slope-aspect-from-digital-elevation-model/>
-<https://vuejs.org/guide/typescript/overview.html>
+- <https://portal.opentopography.org/datasets>
+- <https://en.wikipedia.org/wiki/Digital_elevation_model>
+- <https://matplotlib.org/stable/users/index.html>
+- <https://earthdatascience.org/tutorials/get-slope-aspect-from-digital-elevation-model/>
+- <https://vuejs.org/guide/typescript/overview.html>
