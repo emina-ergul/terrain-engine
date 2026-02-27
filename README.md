@@ -2,6 +2,12 @@
 
 This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
 
+# To run
+
+Go into the backend folder and run 'just dev'
+
+Go into the frontend folder and run 'npm run dev'
+
 # terrain-engine learning points
 
 ### Data
@@ -80,6 +86,7 @@ This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevatio
 
 - <https://portal.opentopography.org/datasets>
 - <https://en.wikipedia.org/wiki/Digital_elevation_model>
+- <https://rasterio.readthedocs.io/en/stable/topics/reading.html>
 - <https://matplotlib.org/stable/users/index.html>
 - <https://earthdatascience.org/tutorials/get-slope-aspect-from-digital-elevation-model/>
 - <https://vuejs.org/guide/typescript/overview.html>
