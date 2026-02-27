@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 const emits = defineEmits(['images-processed'])
 const selectedFile = ref<File | null>(null)
@@ -12,7 +12,7 @@ function handle_file_change(event: Event) {
 async function load_example() {
   loading.value = true
 
-  const res = await fetch('http://127.0.0.1:8000/calculate-terrain-example', { method: 'GET' })
+  const res = await fetch('http://127.0.0.1:8000/process-terrain-example', { method: 'GET' })
   const data = await res.json()
   console.log(data)
   emits('images-processed', data.images)
@@ -34,7 +34,7 @@ async function process_file() {
   const formData = new FormData()
   formData.append('tif_file', selectedFile.value)
 
-  const res = await fetch('http://127.0.0.1:8000/calculate-terrain-from-file', {
+  const res = await fetch('http://127.0.0.1:8000/process-terrain-from-file', {
     method: 'POST',
     body: formData,
   })
