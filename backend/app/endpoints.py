@@ -2,7 +2,7 @@ import os
 import shutil
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from app.services.process_dem import calculate_terrain
+from app.services.process_dem import process_terrain
 from app.services.create_maps import create_maps
 
 router = APIRouter()
@@ -28,11 +28,11 @@ def upload_file(file: UploadFile):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/calculate-terrain-example")
-def calculate_terrain_endpoint():
+@router.get("/process-terrain-example")
+def process_terrain_endpoint():
     try:
         example_file = "brecon_dem_27700.tif"
-        calculate_terrain(example_file)
+        process_terrain(example_file)
         create_maps()
         url = get_image_urls()
         print("Generated image URLs:", url)
@@ -42,11 +42,11 @@ def calculate_terrain_endpoint():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/calculate-terrain-from-file")
-def calculate_terrain_from_file_endpoint(tif_file: UploadFile = File(...)):
+@router.post("/process-terrain-from-file")
+def process_terrain_from_file_endpoint(tif_file: UploadFile = File(...)):
     try:
         upload_file(tif_file)
-        calculate_terrain(tif_file.filename)
+        process_terrain(tif_file.filename)
         create_maps()
         url = get_image_urls()
         return {"images": url}
