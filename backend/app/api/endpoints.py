@@ -2,7 +2,7 @@ import os
 import shutil
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from backend.app.services.process_raster import process_terrain
+from app.services.process_raster import process_terrain
 from app.services.create_maps import create_maps
 
 router = APIRouter()
@@ -29,7 +29,7 @@ def upload_file(file: UploadFile):
 
 
 @router.get("/process-terrain-example")
-def process_terrain_endpoint():
+def process_terrain_example_endpoint():
     try:
         example_file = "brecon_dem_27700.tif"
         process_terrain(example_file)

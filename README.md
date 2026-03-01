@@ -22,13 +22,13 @@ Go into the frontend folder and run 'npm run dev'
 
 - Using EPSG:27700 (British National Grid) means the units are in meters
 
-- To calculate just the pixel grid data, you can use src.read(1) to receive the raw pixels as a numpy array.
+- To get the pixel grid data, you can use src.read(1) to receive the raw pixels as a numpy array.
 
 - The **profile** contains the geo metadata
 
 - Saving with profile reinserts the geo metadata after calculations have been made so that the raster remians georeferenced
 
-- When opening a file with rasterio, src.res returns 2 values (dx, dy), one for pixel width and one for pixel height
+- When opening a file with rasterio, src.res returns 2 values (dx, dy), one for pixel width and one for pixel height, these are the spacing values
 
 
 ### General
