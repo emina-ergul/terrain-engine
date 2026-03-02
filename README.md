@@ -4,6 +4,11 @@ This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevatio
 
 # To run
 
+After cloning the repo, you'll need to have installed anaconda or miniconda to replicate the env from your terminal with:
+
+- conda env create -f environment.yaml
+- conda activate terrain-engine-env
+
 Go into the backend folder and run 'just dev'
 
 Go into the frontend folder and run 'npm run dev'
