@@ -1,11 +1,21 @@
 import os
+from osgeo import gdal
 import numpy as np
 import rasterio
+from rasterio.warp import calculate_default_transform, reproject, Resampling
 
+gdal.UseExceptions()
+
+raw_path = "./storage/raw"
 processed_dir = "./storage/processed"
 
 
 def clear_old_processed_files():
+    if os.path.exists(raw_path):
+        for file in os.listdir(raw_path):
+            if "projected" in file:
+                os.remove(os.path.join(raw_path, file))
+
     if os.path.exists(processed_dir):
         for file in os.listdir(processed_dir):
             os.remove(os.path.join(processed_dir, file))
@@ -49,6 +59,36 @@ def calculate_curvature(dem, dx, dy):
     return curvature
 
 
+def reproject_to_utm(raw_file, projected_path):
+    with rasterio.open(raw_file) as src:
+        if not src.crs.is_geographic:
+            print("retruning raw")
+            return raw_file
+        else:
+            bounds = src.bounds
+            lat_centre = (bounds.top + bounds.bottom) / 2
+            lon_centre = (bounds.left + bounds.right) / 2
+            utm_zone = int((lon_centre + 180) / 6) + 1
+
+            if lat_centre >= 0:
+                epsg_code = 32600 + utm_zone
+            else:
+                epsg_code = 32700 + utm_zone
+
+            dst_crs = f"EPSG:{epsg_code}"
+            try:
+                gdal.Warp(
+                    projected_path,
+                    raw_file,
+                    dstSRS=dst_crs,
+                    resampleAlg="bilinear",
+                    format="GTiff",
+                )
+                return projected_path
+            except Exception as e:
+                print("Error during reprojection:", e)
+
+
 def save_raster(profile, name, data):
     out_profile = profile.copy()
     out_profile.update(dtype=rasterio.float32, count=1)
@@ -58,16 +98,20 @@ def save_raster(profile, name, data):
         print(f"Saved {name} to {out_path}")
 
 
-def process_terrain(tif_file):
+def process_terrain(tif_file) -> None:
+    print("Clearing out old files...")
     clear_old_processed_files()
+
+    raw_file = f"./storage/raw/{tif_file}"
+    os.makedirs(processed_dir, exist_ok=True)
 
     print("Starting terrain processing...")
 
-    # Reprojected to EPSG:27700 using GDAL bc im using data of Brecon
-    raw_data = f"./storage/raw/{tif_file}"
-    os.makedirs(processed_dir, exist_ok=True)
+    projected_path = os.path.join(raw_path, "projected.tiff")
 
-    with rasterio.open(raw_data) as src:
+    processed_raw = reproject_to_utm(raw_file, projected_path)
+
+    with rasterio.open(processed_raw) as src:
         dem = src.read(1)
         profile = src.profile
         dx, dy = src.res

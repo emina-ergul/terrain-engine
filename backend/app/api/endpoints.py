@@ -10,11 +10,13 @@ router = APIRouter()
 UPLOAD_DIR = "./storage/raw"
 
 
-def get_image_urls():
+def mount_image_urls(saved_maps):
     base_url = "http://127.0.0.1:8000/images"
-    pngs = os.listdir("./storage/maps")
-    url = {name.split(".")[0]: f"{base_url}/{name}" for name in pngs}
-    return url
+    urls = {}
+    for name, path in saved_maps.items():
+        filename = os.path.basename(path)
+        urls[name] = f"{base_url}/{filename}"
+    return urls
 
 
 def upload_file(file: UploadFile):
@@ -31,12 +33,11 @@ def upload_file(file: UploadFile):
 @router.get("/process-terrain-example")
 def process_terrain_example_endpoint():
     try:
-        example_file = "brecon_dem_27700.tif"
+        example_file = "brecon_dem.gtiff"
         process_terrain(example_file)
-        create_maps()
-        url = get_image_urls()
-        print("Generated image URLs:", url)
-        return {"images": url}
+        saved_maps = create_maps()
+        urls = mount_image_urls(saved_maps)
+        return {"images": urls}
     except Exception as e:
         print(f"Error processing example terrain: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -47,9 +48,9 @@ def process_terrain_from_file_endpoint(tif_file: UploadFile = File(...)):
     try:
         upload_file(tif_file)
         process_terrain(tif_file.filename)
-        create_maps()
-        url = get_image_urls()
-        return {"images": url}
+        saved_maps = create_maps()
+        urls = mount_image_urls(saved_maps)
+        return {"images": urls}
     except Exception as e:
         print(f"Error processing terrain from file: {e}")
         raise HTTPException(status_code=500, detail=str(e))

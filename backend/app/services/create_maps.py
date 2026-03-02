@@ -8,17 +8,19 @@ import numpy as np
 import os
 
 
-def remove_maps():
+def remove_old_maps():
     maps_dir = "./storage/maps"
     if os.path.exists(maps_dir):
         for file in os.listdir(maps_dir):
             os.remove(os.path.join(maps_dir, file))
 
 
-def create_maps():
-    remove_maps()
+def create_maps() -> list:
+    remove_old_maps()
     processed_dir = "./storage/processed"
     tiffs = os.listdir(processed_dir)
+
+    saved_files = {}
 
     for name in tiffs:
         path = os.path.join(processed_dir, name)
@@ -51,7 +53,13 @@ def create_maps():
 
         output_dir = "./storage/maps"
         os.makedirs(output_dir, exist_ok=True)
-        output_img_path = os.path.join(output_dir, f"{name.split('.')[0]}.png")
+        timestamp = int(time.time())
+        output_img_path = os.path.join(
+            output_dir, f"{timestamp}-{name.split('.')[0]}.png"
+        )
         plt.savefig(output_img_path)
         plt.close()
+
+        saved_files[name.split(".")[0]] = output_img_path
         print(f"Saved {name} map to {output_img_path}")
+    return saved_files

@@ -27,13 +27,7 @@ from fastapi.responses import FileResponse
 @app.get("/images/{image_name}")
 def get_image(image_name: str):
     file_path = f"./storage/maps/{image_name}"
-    return FileResponse(
-        file_path,
-        headers={
-            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-            "Pragma": "no-cache",
-        },
-    )
+    return FileResponse(file_path)
 
 
 @app.get("/", include_in_schema=False)

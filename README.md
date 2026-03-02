@@ -20,6 +20,8 @@ Go into the frontend folder and run 'npm run dev'
 
 - GeoJSON is vector not raster data
 
+- EPSG is a code used to define geospatial referncing, ensuring consistent spatial referencing across different software. Codes can be used in transforming coordinate data from lat/long to UTM for example.
+
 - Using EPSG:27700 (British National Grid) means the units are in meters
 
 - To get the pixel grid data, you can use src.read(1) to receive the raw pixels as a numpy array.
