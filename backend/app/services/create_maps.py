@@ -44,7 +44,7 @@ def create_maps() -> list:
             cmap = "RdBu"
             vmin = np.nanpercentile(data, 5)
             vmax = np.nanpercentile(data, 95)
-        print("!!!!!!!!!!!!!!!!!!!!!!!!")
+
         plt.figure(figsize=(6, 6))
         im = plt.imshow(data, cmap=cmap, vmin=vmin, vmax=vmax)
         plt.title(name.split(".")[0].capitalize())

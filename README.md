@@ -1,6 +1,6 @@
 # Project Overview
 
-This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) of a small area in Brecon, Wales to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
+This project uses a GeoTiff of SRTM GL1 30 dataset of DEM data (Digital Elevation Model) to calculate the slope, aspect, hillshade, and curvature of the terrain. With the help of matplotlib, the frontend displays a visual of the terrain analysis outcome.
 
 # To run
 
@@ -14,21 +14,23 @@ Go into the frontend folder and run 'npm run dev'
 
 - A **DEM** (digital elevation model) is a map of elevation, where data is like a grid and each plot represents an area of certain size
 
-- **raster data** is how the DEM is stored, so a grid of pixels and each pixel stores a value
+- **raster data** is a grid of pixels and each pixel stores a numerical value
 
-- A GeoTif holds DEM raster but with additional geographical info like georeferencing so the location on earth is known
+- A GeoTiff is a raster file format that holds the grid data but with additional geographical metadata like georeferencing so the location on earth is known
 
 - GeoJSON is vector not raster data
 
 - EPSG is a code used to define geospatial referncing, ensuring consistent spatial referencing across different software. Codes can be used in transforming coordinate data from lat/long to UTM for example.
 
-- Using EPSG:27700 (British National Grid) means the units are in meters
+- EPSG:27700 (British National Grid) is a CRS for Great Britain with the units in meters
+
+- In order to dynamically adjust for any ESPG code (because some use degrees and not meters), I converted to UTM(universal tranverse mercator) using gdal.Warp() if the data is in degrees, which creates a new raster file with projected CRS(coordinate refernece system)
 
 - To get the pixel grid data, you can use src.read(1) to receive the raw pixels as a numpy array.
 
-- The **profile** contains the geo metadata
+- The rasterio **profile** contains the geo metadata
 
-- Saving with profile reinserts the geo metadata after calculations have been made so that the raster remians georeferenced
+- Saving with profile reinserts the geo metadata after calculations have been made so that the raster remains georeferenced
 
 - When opening a file with rasterio, src.res returns 2 values (dx, dy), one for pixel width and one for pixel height, these are the spacing values
 
@@ -89,6 +91,7 @@ Go into the frontend folder and run 'npm run dev'
 - <https://portal.opentopography.org/datasets>
 - <https://en.wikipedia.org/wiki/Digital_elevation_model>
 - <https://rasterio.readthedocs.io/en/stable/topics/reading.html>
+- <https://earthdatascience.org/courses/use-data-open-source-python/intro-raster-data-python/fundamentals-raster-data/raster-metadata-in-python/>
 - <https://matplotlib.org/stable/users/index.html>
 - <https://earthdatascience.org/tutorials/get-slope-aspect-from-digital-elevation-model/>
 - <https://vuejs.org/guide/typescript/overview.html>
