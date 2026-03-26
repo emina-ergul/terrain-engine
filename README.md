@@ -9,9 +9,17 @@ After cloning the repo, you'll need to have installed anaconda or miniconda to r
 - conda env create -f environment.yaml
 - conda activate terrain-engine-env
 
-Go into the backend folder and run 'just dev'
+Go into the backend folder and run 'just run'
 
 Go into the frontend folder and run 'npm run dev'
+
+# Screenshots
+Initial page
+<img width="1918" height="455" alt="Initial page of terrain engine" src="https://github.com/user-attachments/assets/ed1334b4-0a9c-4f57-ab3b-2493fae1e6c2" />
+<br>
+<br>
+Generated maps example
+<img width="1912" height="990" alt="Example of generated terrain attribute maps" src="https://github.com/user-attachments/assets/aa40fc35-2ac5-4412-83b9-f36be42c7297" />
 
 # terrain-engine learning points
 
